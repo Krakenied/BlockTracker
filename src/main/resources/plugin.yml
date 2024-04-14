@@ -1,0 +1,12 @@
+name: ${project.name}
+description: A simple plugin to keep track of blocks placed by players.
+version: ${project.version}
+author: Krakenied
+website: https://github.com/Krakenied/BlockTracker
+main: dev.krakenied.blocktracker.bukkit.BukkitBlockTrackerPlugin
+loadbefore: [Quests]
+api-version: '1.20'
+
+permissions:
+  blocktracker.debug:
+    default: op
