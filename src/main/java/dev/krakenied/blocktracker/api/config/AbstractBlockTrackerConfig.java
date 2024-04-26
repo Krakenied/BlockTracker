@@ -32,11 +32,11 @@ public abstract class AbstractBlockTrackerConfig<Y> {
 
     public abstract void setHeader(final @NotNull List<String> header);
 
-    public abstract void copyDefaults(final boolean copyDefaults);
+    public abstract void width(final int width);
 
     public abstract @NotNull Logger getLogger();
 
-    public abstract boolean getBoolean(final @NotNull String path, final boolean def);
+    public abstract boolean getBoolean(final @NotNull String path, final boolean def, final @NotNull List<String> comments);
 
     public void reloadConfig() {
         // Set the config file
@@ -63,7 +63,7 @@ public abstract class AbstractBlockTrackerConfig<Y> {
 
         // Set the config header and enable copying defaults
         this.setHeader(header);
-        this.copyDefaults(true);
+        this.width(Integer.MAX_VALUE);
 
         // Load the config and set its defaults
         final Method[] methods = AbstractBlockTrackerConfig.class.getDeclaredMethods();
@@ -90,11 +90,19 @@ public abstract class AbstractBlockTrackerConfig<Y> {
         }
     }
 
-    public boolean trackPistonHeads = false; // disable by default (https://github.com/PaperMC/Paper/pull/9258/)
+    public boolean trackPistonHeads = false;
     public boolean disableBoneMealTracking = false;
 
     private void options() {
-        this.trackPistonHeads = this.getBoolean("track-piston-heads", this.trackPistonHeads);
-        this.disableBoneMealTracking = this.getBoolean("disable-bone-meal-tracking", this.disableBoneMealTracking);
+        this.trackPistonHeads = this.getBoolean("track-piston-heads", this.trackPistonHeads, List.of(
+                "!!! CURRENTLY UNSUPPORTED !!!",
+                "Whether piston heads should be tracked. Only toggle this option if you're absolutely certain of",
+                "its consequences. This option is disabled by default due to improper functionality. The default",
+                "value of this option will be changed once Paper merges the PR below, however, the plugin code",
+                "change most probably will still be required (https://github.com/PaperMC/Paper/pull/9258)."
+        ));
+        this.disableBoneMealTracking = this.getBoolean("disable-bone-meal-tracking", this.disableBoneMealTracking, List.of(
+                "Whether blocks grown with bone meal should NOT be tracked."
+        ));
     }
 }

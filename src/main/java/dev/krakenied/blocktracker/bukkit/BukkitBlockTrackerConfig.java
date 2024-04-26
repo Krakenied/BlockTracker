@@ -54,8 +54,8 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
     }
 
     @Override
-    public void copyDefaults(final boolean copyDefaults) {
-        this.config.options().copyDefaults(copyDefaults);
+    public void width(final int width) {
+        this.config.options().width(width);
     }
 
     @Override
@@ -64,8 +64,16 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
     }
 
     @Override
-    public boolean getBoolean(final @NotNull String path, final boolean def) {
-        this.config.addDefault(path, def);
+    public boolean getBoolean(final @NotNull String path, final boolean def, final @NotNull List<String> comments) {
+        this.setDefault(path, def, comments);
         return this.config.getBoolean(path);
+    }
+
+    private <T> void setDefault(final @NotNull String path, final T def, final @NotNull List<String> comments) {
+        final boolean contains = this.config.contains(path, true);
+        if (!contains) {
+            this.config.set(path, def);
+        }
+        this.config.setComments(path, comments);
     }
 }
