@@ -6,7 +6,7 @@
 
     <groupId>dev.krakenied</groupId>
     <artifactId>blocktracker</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
 
     <name>BlockTracker</name>
     <inceptionYear>2023</inceptionYear>
