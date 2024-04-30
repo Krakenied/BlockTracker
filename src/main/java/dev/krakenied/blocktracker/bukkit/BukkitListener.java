@@ -321,7 +321,7 @@ public final class BukkitListener implements Listener {
                 return;
             }
 
-            if (blockType == Material.SNIFFER_EGG) {
+            if (blockType == BukkitConstants.SNIFFER_EGG_MATERIAL) {
                 return;
             }
         }
