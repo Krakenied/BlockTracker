@@ -1,3 +1,5 @@
+High performance block tracking solution for your server.
+
 Using BlockTracker in your plugin
 ------
 ##### Maven
@@ -11,7 +13,7 @@ Using BlockTracker in your plugin
 <dependency>
     <groupId>dev.krakenied</groupId>
     <artifactId>blocktracker</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 ##### Gradle
@@ -24,6 +26,13 @@ repositories {
 ```
 ```kotlin
 dependencies {
-    compileOnly("dev.krakenied:blocktracker:1.0.2")
+    compileOnly("dev.krakenied:blocktracker:1.0.3")
 }
+```
+Using BlockTracker with LMBishop's [Quests](https://modrinth.com/plugin/quests) plugin
+------
+##### config.yml
+```yml
+# PlayerBlockTracker class to be used with the hook
+playerblocktracker-class-name: "dev.krakenied.blocktracker.bukkit.BukkitBlockTrackerPlugin"
 ```
