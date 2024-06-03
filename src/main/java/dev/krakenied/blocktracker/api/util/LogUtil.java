@@ -2,14 +2,19 @@ package dev.krakenied.blocktracker.api.util;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public final class LogUtil {
 
     public static @NotNull String block2String(final @NotNull Block block) {
-        final Location location = block.getLocation();
-        return block.getType()
+        return LogUtil.state2String(block.getState());
+    }
+
+    public static @NotNull String state2String(final @NotNull BlockState state) {
+        final Location location = state.getLocation();
+        return state.getType()
                 + "/" + LogUtil.location2String(location);
     }
 
