@@ -40,6 +40,7 @@ import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -431,5 +432,22 @@ public final class BukkitListener implements Listener {
     public void onPlayerBucketFill(final @NotNull PlayerBucketFillEvent event) {
         final Block block = event.getBlock();
         this.trackingManager.untrackByBlock(block);
+    }
+
+    // Mycelium spreading
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockSpread(final @NotNull BlockSpreadEvent event) {
+        final Block block = event.getBlock();
+
+        if (this.plugin.getBlockTrackerConfig().disableBlockSpreadTracking) {
+            this.trackingManager.untrackByBlock(block);
+        } else {
+            final Block source = event.getSource();
+            final boolean sourceTracked = this.trackingManager.isTrackedByBlock(source);
+
+            if (sourceTracked) {
+                this.trackingManager.trackByBlock(block);
+            }
+        }
     }
 }

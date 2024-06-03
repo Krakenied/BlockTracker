@@ -92,6 +92,7 @@ public abstract class AbstractBlockTrackerConfig<Y> {
 
     public boolean trackPistonHeads = false;
     public boolean disableBoneMealTracking = false;
+    public boolean disableBlockSpreadTracking = true;
 
     private void options() {
         this.trackPistonHeads = this.getBoolean("track-piston-heads", this.trackPistonHeads, List.of(
@@ -102,7 +103,10 @@ public abstract class AbstractBlockTrackerConfig<Y> {
                 "change most probably will still be required (https://github.com/PaperMC/Paper/pull/9258)."
         ));
         this.disableBoneMealTracking = this.getBoolean("disable-bone-meal-tracking", this.disableBoneMealTracking, List.of(
-                "Whether blocks grown with bone meal should NOT be tracked."
+                "Disables tracking of blocks grown with bone meal."
+        ));
+        this.disableBlockSpreadTracking = this.getBoolean("disable-block-spread-tracking", this.disableBlockSpreadTracking, List.of(
+                "Disables tracking of blocks spread from tracked blocks."
         ));
     }
 }
