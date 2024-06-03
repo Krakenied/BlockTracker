@@ -322,6 +322,7 @@ public final class BukkitListener implements Listener {
                 return;
             }
 
+            // blockType cannot be null so no need to check if the constant is
             if (blockType == BukkitConstants.SNIFFER_EGG_MATERIAL) {
                 return;
             }
