@@ -371,6 +371,9 @@ public final class BukkitListener implements Listener {
         final Block secondBlock;
 
         // Double vertical blocks
+        //
+        // I don't want it to be switch due to readability reasons
+        //noinspection IfCanBeSwitch
         if (blockData instanceof final Bisected bisected && !(blockData instanceof SmallDripleaf || blockData instanceof Stairs || blockData instanceof TrapDoor)) {
             final Bisected.Half half = bisected.getHalf();
 
@@ -439,6 +442,8 @@ public final class BukkitListener implements Listener {
     public void onBlockSpread(final @NotNull BlockSpreadEvent event) {
         final Block block = event.getBlock();
 
+        // TODO: in case we wanted to handle it another way
+        // && (this.plugin.getBlockTrackerConfig().disableBoneMealTracking || block.getType() != Material.HANGING_ROOTS)
         if (this.plugin.getBlockTrackerConfig().disableBlockSpreadTracking) {
             this.trackingManager.untrackByBlock(block);
         } else {
