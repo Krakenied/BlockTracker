@@ -2,10 +2,11 @@ package dev.krakenied.blocktracker.api.manager;
 
 import dev.krakenied.blocktracker.api.data.WorldMap;
 import dev.krakenied.blocktracker.api.object.AbstractTrackedWorld;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -144,7 +145,7 @@ public abstract class AbstractTrackingManager<W, C, B, S, F> {
     }
 
     public void shiftByBlockList(final @NotNull List<B> blocks, final @NotNull F direction) {
-        final List<B> blocksCopy = new ArrayList<>(blocks);
+        final ObjectList<B> blocksCopy = new ObjectArrayList<>(blocks);
 
         final int size = blocksCopy.size();
         final boolean[] untracked = new boolean[size];
