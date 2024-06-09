@@ -67,7 +67,13 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
         final int year = Year.now().getValue();
         final List<String> header = List.of(
                 "(c) Krakenied " + year,
-                "Powered by " + this.getPluginName() + " version " + this.getPluginVersion()
+                "Powered by " + this.getPluginName() + " version " + this.getPluginVersion(),
+                "",
+                "Built-in permissions:",
+                "blocktracker.command - to use the /blocktracker command, which reloads the plugin.",
+                "blocktracker.debug - to use the debug wand, which is the Heart of the Sea.",
+                "",
+                "All the permissions are granted by default to server operators."
         );
 
         // Load the config from file
