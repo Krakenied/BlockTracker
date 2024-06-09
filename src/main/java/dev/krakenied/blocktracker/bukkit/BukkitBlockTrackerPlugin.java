@@ -4,6 +4,7 @@ import dev.krakenied.blocktracker.api.BlockTrackerPlugin;
 import dev.krakenied.blocktracker.api.config.AbstractBlockTrackerConfig;
 import dev.krakenied.blocktracker.api.manager.AbstractTrackingManager;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,9 +14,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockTrackerPlugin<YamlConfiguration, World, Chunk, Block, BlockState, BlockFace> {
+public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockTrackerPlugin<YamlConfiguration, World, Chunk, Block, BlockState, BlockFace, Material> {
 
-    private final AbstractBlockTrackerConfig<YamlConfiguration> blockTrackerConfig = new BukkitBlockTrackerConfig(this);
+    private final AbstractBlockTrackerConfig<YamlConfiguration, Material> blockTrackerConfig = new BukkitBlockTrackerConfig(this);
     private final AbstractTrackingManager<World, Chunk, Block, BlockState, BlockFace> trackingManager = new BukkitTrackingManager();
 
     @Override
@@ -34,7 +35,7 @@ public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockT
     }
 
     @Override
-    public @NotNull AbstractBlockTrackerConfig<YamlConfiguration> getBlockTrackerConfig() {
+    public @NotNull AbstractBlockTrackerConfig<YamlConfiguration, Material> getBlockTrackerConfig() {
         return this.blockTrackerConfig;
     }
 

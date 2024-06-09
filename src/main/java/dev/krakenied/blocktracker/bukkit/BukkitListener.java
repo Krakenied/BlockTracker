@@ -63,7 +63,7 @@ import java.util.List;
 public final class BukkitListener implements Listener {
 
     private final BukkitBlockTrackerPlugin plugin;
-    private final AbstractBlockTrackerConfig<YamlConfiguration> blockTrackerConfig;
+    private final AbstractBlockTrackerConfig<YamlConfiguration, Material> blockTrackerConfig;
     private final AbstractTrackingManager<World, Chunk, Block, BlockState, BlockFace> trackingManager;
 
     public BukkitListener(final @NotNull BukkitBlockTrackerPlugin plugin) {
@@ -442,13 +442,19 @@ public final class BukkitListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockSpread(final @NotNull BlockSpreadEvent event) {
         final Block block = event.getBlock();
+        final Block source = event.getSource();
 
         // TODO: in case we wanted to handle it another way
         // && (this.plugin.getBlockTrackerConfig().disableBoneMealTracking || block.getType() != Material.HANGING_ROOTS)
         if (this.plugin.getBlockTrackerConfig().disableBlockSpreadTracking) {
+            final Material sourceType = source.getType();
+
+            if (this.plugin.getBlockTrackerConfig().sourcesToUntrackOnBlockSpread.contains(sourceType)) {
+                this.trackingManager.untrackByBlock(source);
+            }
+
             this.trackingManager.untrackByBlock(block);
         } else {
-            final Block source = event.getSource();
             final boolean sourceTracked = this.trackingManager.isTrackedByBlock(source);
 
             if (sourceTracked) {

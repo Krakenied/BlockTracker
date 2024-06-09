@@ -1,6 +1,9 @@
 package dev.krakenied.blocktracker.bukkit;
 
 import dev.krakenied.blocktracker.api.config.AbstractBlockTrackerConfig;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,12 +12,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<YamlConfiguration> {
+public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<YamlConfiguration, Material> {
 
     private final BukkitBlockTrackerPlugin plugin;
 
     public BukkitBlockTrackerConfig(final @NotNull BukkitBlockTrackerPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    @Override
+    public @NotNull Class<Material> getMaterialClass() {
+        return Material.class;
     }
 
     @Override
@@ -67,6 +75,25 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
     public boolean getBoolean(final @NotNull String path, final boolean def, final @NotNull List<String> comments) {
         this.setDefault(path, def, comments);
         return this.config.getBoolean(path);
+    }
+
+    @Override
+    public @NotNull List<String> getStringList(final @NotNull String path, final @NotNull List<String> def, final @NotNull List<String> comments) {
+        this.setDefault(path, def, comments);
+
+        final List<?> list = this.config.getList(path, def);
+        final int expectedSize = list.size();
+
+        final ObjectList<String> stringList = new ObjectArrayList<>(expectedSize);
+        for (final Object object : list) {
+            if (object instanceof final String string) {
+                stringList.add(string);
+            } else {
+                this.plugin.getLogger().severe(object + " is not a string type value, skipping!");
+            }
+        }
+
+        return stringList;
     }
 
     private <T> void setDefault(final @NotNull String path, final T def, final @NotNull List<String> comments) {

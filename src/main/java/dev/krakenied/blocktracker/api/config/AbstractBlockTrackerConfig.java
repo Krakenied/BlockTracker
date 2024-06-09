@@ -1,5 +1,6 @@
 package dev.krakenied.blocktracker.api.config;
 
+import dev.krakenied.blocktracker.api.util.UnsafeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -8,15 +9,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.time.Year;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("unused")
-public abstract class AbstractBlockTrackerConfig<Y> {
+public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
 
     protected File configFile;
     protected Y config;
+
+    public abstract @NotNull Class<M> getMaterialClass();
 
     public abstract @NotNull File getPluginFolder();
 
@@ -37,6 +41,20 @@ public abstract class AbstractBlockTrackerConfig<Y> {
     public abstract @NotNull Logger getLogger();
 
     public abstract boolean getBoolean(final @NotNull String path, final boolean def, final @NotNull List<String> comments);
+
+    public abstract @NotNull List<String> getStringList(final @NotNull String path, final @NotNull List<String> def, final @NotNull List<String> comments);
+
+    public <E extends Enum<E>> @NotNull EnumSet<E> getEnumSet(final @NotNull Class<E> enumClass, final @NotNull String path, final @NotNull EnumSet<E> def, final @NotNull List<String> comments) {
+        return UnsafeUtil.stringList2EnumSet(
+                enumClass,
+                this.getLogger(),
+                this.getStringList(
+                        path,
+                        UnsafeUtil.enumSet2StringList(def),
+                        comments
+                )
+        );
+    }
 
     public void reloadConfig() {
         // Set the config file
@@ -61,7 +79,7 @@ public abstract class AbstractBlockTrackerConfig<Y> {
             throw new RuntimeException(t);
         }
 
-        // Set the config header and enable copying defaults
+        // Set the config header and width
         this.setHeader(header);
         this.width(Integer.MAX_VALUE);
 
@@ -93,6 +111,9 @@ public abstract class AbstractBlockTrackerConfig<Y> {
     public boolean trackPistonHeads = false;
     public boolean disableBoneMealTracking = false;
     public boolean disableBlockSpreadTracking = true;
+    public EnumSet<M> sourcesToUntrackOnBlockSpread = UnsafeUtil.stringList2EnumSet(this.getMaterialClass(), null, List.of(
+            "CHORUS_FLOWER"
+    ));
 
     private void options() {
         this.trackPistonHeads = this.getBoolean("track-piston-heads", this.trackPistonHeads, List.of(
@@ -107,6 +128,9 @@ public abstract class AbstractBlockTrackerConfig<Y> {
         ));
         this.disableBlockSpreadTracking = this.getBoolean("disable-block-spread-tracking", this.disableBlockSpreadTracking, List.of(
                 "Disables tracking of blocks spread from tracked blocks."
+        ));
+        this.sourcesToUntrackOnBlockSpread = this.getEnumSet(this.getMaterialClass(), "sources-to-untrack-on-block-spread", this.sourcesToUntrackOnBlockSpread, List.of(
+                "Specifies the list of source block materials to be untracked on block spread event."
         ));
     }
 }
