@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockTrackerPlugin<YamlConfiguration, World, Chunk, Block, BlockState, BlockFace, Material> {
 
-    private final AbstractBlockTrackerConfig<YamlConfiguration, Material> blockTrackerConfig = new BukkitBlockTrackerConfig(this);
-    private final AbstractTrackingManager<World, Chunk, Block, BlockState, BlockFace> trackingManager = new BukkitTrackingManager();
+    private final BukkitBlockTrackerConfig blockTrackerConfig = new BukkitBlockTrackerConfig(this);
+    private final BukkitTrackingManager trackingManager = new BukkitTrackingManager();
 
     @Override
     public void onEnable() {
