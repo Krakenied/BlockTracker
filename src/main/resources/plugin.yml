@@ -8,5 +8,7 @@ loadbefore: [Quests]
 api-version: '1.18'
 
 permissions:
+  blocktracker.command:
+    default: op
   blocktracker.debug:
     default: op

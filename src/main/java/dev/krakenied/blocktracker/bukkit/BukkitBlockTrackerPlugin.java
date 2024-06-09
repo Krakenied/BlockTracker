@@ -25,6 +25,7 @@ public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockT
 
         this.blockTrackerConfig.reloadConfig();
         this.trackingManager.initializeLoadedWorlds();
+        this.registerCommands();
         this.registerListeners();
     }
 
@@ -35,6 +36,11 @@ public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockT
     }
 
     @Override
+    public void reloadConfig() {
+        this.blockTrackerConfig.reloadConfig();
+    }
+
+    @Override
     public @NotNull AbstractBlockTrackerConfig<YamlConfiguration, Material> getBlockTrackerConfig() {
         return this.blockTrackerConfig;
     }
@@ -42,6 +48,10 @@ public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockT
     @Override
     public @NotNull AbstractTrackingManager<World, Chunk, Block, BlockState, BlockFace> getTrackingManager() {
         return this.trackingManager;
+    }
+
+    private void registerCommands() {
+        this.getServer().getCommandMap().register("blocktracker", new BukkitBlockTrackerCommand(this));
     }
 
     private void registerListeners() {
