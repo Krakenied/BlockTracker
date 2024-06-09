@@ -67,10 +67,12 @@ public abstract class AbstractTrackedWorld<C, B, S> {
         );
     }
 
+    @SuppressWarnings("DataFlowIssue")
     protected @NotNull TrackedChunk getTrackedChunkByBlock(final @NotNull B block) {
         return this.chunkMap.getByBlock(this.getBlockX(block), this.getBlockZ(block));
     }
 
+    @SuppressWarnings("DataFlowIssue")
     protected @NotNull TrackedChunk getTrackedChunkByState(final @NotNull S state) {
         return this.chunkMap.getByBlock(this.getStateX(state), this.getStateZ(state));
     }
