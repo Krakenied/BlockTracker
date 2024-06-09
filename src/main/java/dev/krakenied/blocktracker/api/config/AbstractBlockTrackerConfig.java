@@ -136,7 +136,9 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
                 "Disables tracking of blocks spread from tracked blocks."
         ));
         this.sourcesToUntrackOnBlockSpread = this.getEnumSet(this.getMaterialClass(), "sources-to-untrack-on-block-spread", this.sourcesToUntrackOnBlockSpread, List.of(
-                "Specifies the list of source block materials to be untracked on block spread event."
+                "Specifies the list of source block materials that should be untracked when they cause",
+                "block spread events. This means that when these source blocks spread to other blocks,",
+                "the source blocks will be removed from tracking."
         ));
     }
 }
