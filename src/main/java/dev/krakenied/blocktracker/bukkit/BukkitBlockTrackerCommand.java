@@ -17,7 +17,7 @@ public final class BukkitBlockTrackerCommand extends Command {
     }
 
     @Override
-    public boolean execute(final @NotNull CommandSender sender, final @NotNull String label, final @NotNull String[] args) {
+    public boolean execute(final @NotNull CommandSender sender, final @NotNull String label, final @NotNull String @NotNull [] args) {
         this.plugin.reloadConfig();
         sender.sendMessage(Component.text("BlockTracker configuration reloaded!", TextColor.color(0x4CBB17)));
         return true;

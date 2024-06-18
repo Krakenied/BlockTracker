@@ -1,6 +1,7 @@
 package dev.krakenied.blocktracker.api.object;
 
 import dev.krakenied.blocktracker.api.data.PositionSet;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class TrackedChunk {
@@ -27,7 +28,7 @@ public final class TrackedChunk {
         return this.positionSet.isEmpty();
     }
 
-    public int[] toIntArray() {
+    public int @NotNull [] toIntArray() {
         return this.positionSet.toIntArray();
     }
 }

@@ -1,10 +1,11 @@
 package dev.krakenied.blocktracker.api.data;
 
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import org.jetbrains.annotations.NotNull;
 
 public final class PositionSet extends IntOpenHashSet {
 
-    public PositionSet(final int[] data) {
+    public PositionSet(final int @NotNull [] data) {
         super(data);
     }
 
