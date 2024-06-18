@@ -13,7 +13,7 @@ Using BlockTracker in your plugin
 <dependency>
     <groupId>dev.krakenied</groupId>
     <artifactId>blocktracker</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 </dependency>
 ```
 ##### Gradle
@@ -26,7 +26,7 @@ repositories {
 ```
 ```kotlin
 dependencies {
-    compileOnly("dev.krakenied:blocktracker:1.0.5")
+    compileOnly("dev.krakenied:blocktracker:1.0.6")
 }
 ```
 Using BlockTracker with LMBishop's [Quests](https://modrinth.com/plugin/quests) plugin
