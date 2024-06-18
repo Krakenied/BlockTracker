@@ -120,6 +120,7 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
     public EnumSet<M> sourcesToUntrackOnBlockSpread = UnsafeUtil.stringList2EnumSet(this.getMaterialClass(), null, List.of(
             "CHORUS_FLOWER"
     ));
+    public EnumSet<M> sourcesToIgnoreOnBlockSpread = EnumSet.noneOf(this.getMaterialClass());
 
     private void options() {
         this.trackPistonHeads = this.getBoolean("track-piston-heads", this.trackPistonHeads, List.of(
@@ -139,6 +140,11 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
                 "Specifies the list of source block materials that should be untracked when they cause",
                 "block spread events. This means that when these source blocks spread to other blocks,",
                 "the source blocks will be removed from tracking."
+        ));
+        this.sourcesToIgnoreOnBlockSpread = this.getEnumSet(this.getMaterialClass(), "sources-to-ignore-on-block-spread", this.sourcesToIgnoreOnBlockSpread, List.of(
+                "Specifies the list of source block materials that should be ignored when they cause",
+                "block spread events. This means that when these source blocks spread to other blocks,",
+                "no action will be taken (neither tracking nor untracking)."
         ));
     }
 }

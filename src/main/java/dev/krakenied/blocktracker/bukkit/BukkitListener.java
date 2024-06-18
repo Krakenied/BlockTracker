@@ -441,14 +441,18 @@ public final class BukkitListener implements Listener {
     // Mycelium spreading
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockSpread(final @NotNull BlockSpreadEvent event) {
-        final Block block = event.getBlock();
         final Block source = event.getSource();
+
+        final Material sourceType = source.getType();
+        if (this.plugin.getBlockTrackerConfig().sourcesToIgnoreOnBlockSpread.contains(sourceType)) {
+            return;
+        }
+
+        final Block block = event.getBlock();
 
         // TODO: in case we wanted to handle it another way
         // && (this.plugin.getBlockTrackerConfig().disableBoneMealTracking || block.getType() != Material.HANGING_ROOTS)
         if (this.plugin.getBlockTrackerConfig().disableBlockSpreadTracking) {
-            final Material sourceType = source.getType();
-
             if (this.plugin.getBlockTrackerConfig().sourcesToUntrackOnBlockSpread.contains(sourceType)) {
                 this.trackingManager.untrackByBlock(source);
             }
