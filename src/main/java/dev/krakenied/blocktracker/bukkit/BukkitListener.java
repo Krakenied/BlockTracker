@@ -5,6 +5,9 @@ import dev.krakenied.blocktracker.api.data.ChunkMap;
 import dev.krakenied.blocktracker.api.data.PositionSet;
 import dev.krakenied.blocktracker.api.manager.AbstractTrackingManager;
 import io.papermc.paper.event.block.BlockBreakBlockEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -102,7 +105,23 @@ public final class BukkitListener implements Listener {
 
         event.setUseInteractedBlock(Event.Result.DENY);
 
-        player.sendMessage("tracked (B" + PositionSet.blockKey(block.getX(), block.getY(), block.getZ()) + "/C" + ChunkMap.chunkKey(block.getX() >> 4, block.getZ() >> 4) + "): " + this.trackingManager.isTrackedByBlock(block));
+        final Component debugMessage = this.blockTrackerComponent(block);
+        player.sendMessage(debugMessage);
+    }
+
+    private @NotNull Component blockTrackerComponent(final @NotNull Block block) {
+        return Component.textOfChildren(
+                Component.text("BlockTracker", TextColor.color(0xFFC000)),
+                Component.space(),
+                Component.text('(', NamedTextColor.DARK_GRAY),
+                Component.text("B" + PositionSet.blockKey(block.getX(), block.getY(), block.getZ()), TextColor.color(0xBE02ED)),
+                Component.text('/', TextColor.color(0x808080)),
+                Component.text("C" + ChunkMap.chunkKey(block.getX() >> 4, block.getZ()), TextColor.color(0x39DB0B)),
+                Component.text(')', NamedTextColor.DARK_GRAY),
+                Component.text(':', TextColor.color(0xFFC000)),
+                Component.space(),
+                Component.text(this.trackingManager.isTrackedByBlock(block), NamedTextColor.GRAY)
+        );
     }
 
     // Worlds and chunks
