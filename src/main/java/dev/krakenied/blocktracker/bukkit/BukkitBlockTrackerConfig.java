@@ -95,7 +95,7 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
         return stringList;
     }
 
-    private <T> void setDefault(final @NotNull String path, final T def, final @NotNull List<String> comments) {
+    private <T> void setDefault(final @NotNull String path, final @NotNull T def, final @NotNull List<String> comments) {
         final boolean contains = this.config.contains(path, true);
         if (!contains) {
             this.config.set(path, def);
