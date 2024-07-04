@@ -20,10 +20,7 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
         this.plugin = plugin;
     }
 
-    @Override
-    public @NotNull Class<Material> getMaterialClass() {
-        return Material.class;
-    }
+    // Plugin-related getters
 
     @Override
     public @NotNull File getPluginFolder() {
@@ -40,6 +37,13 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
     public @NotNull String getPluginVersion() {
         return this.plugin.getDescription().getVersion();
     }
+
+    @Override
+    public @NotNull Logger getLogger() {
+        return this.plugin.getLogger();
+    }
+
+    // Config-related methods
 
     @Override
     public void initConfig() {
@@ -64,11 +68,6 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
     @Override
     public void width(final int width) {
         this.config.options().width(width);
-    }
-
-    @Override
-    public @NotNull Logger getLogger() {
-        return this.plugin.getLogger();
     }
 
     @Override
@@ -102,5 +101,12 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
             this.config.set(path, def);
         }
         this.config.setComments(path, comments);
+    }
+
+    // Other weird stuff needed for specific platform compatibility
+
+    @Override
+    public @NotNull Class<Material> getMaterialClass() {
+        return Material.class;
     }
 }

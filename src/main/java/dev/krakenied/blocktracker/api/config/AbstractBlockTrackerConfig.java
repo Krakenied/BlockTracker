@@ -20,13 +20,17 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
     protected File configFile;
     protected Y config;
 
-    public abstract @NotNull Class<M> getMaterialClass();
+    // Plugin-related getters
 
     public abstract @NotNull File getPluginFolder();
 
     public abstract @NotNull String getPluginName();
 
     public abstract @NotNull String getPluginVersion();
+
+    public abstract @NotNull Logger getLogger();
+
+    // Config-related methods
 
     public abstract void initConfig();
 
@@ -37,8 +41,6 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
     public abstract void setHeader(final @NotNull List<String> header);
 
     public abstract void width(final int width);
-
-    public abstract @NotNull Logger getLogger();
 
     public abstract boolean getBoolean(final @NotNull String path, final boolean def, final @NotNull List<String> comments);
 
@@ -55,6 +57,12 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
                 )
         );
     }
+
+    // Other weird stuff needed for specific platform compatibility
+
+    public abstract @NotNull Class<M> getMaterialClass();
+
+    // The actual config part
 
     public void reloadConfig() {
         // Set the config file
