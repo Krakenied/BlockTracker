@@ -6,7 +6,7 @@ version: ${project.version}
 author: Krakenied
 website: https://github.com/Krakenied/BlockTracker
 main: dev.krakenied.blocktracker.bukkit.BukkitBlockTrackerPlugin
-api-version: '1.18'
+api-version: '1.19'
 
 permissions:
   blocktracker.command:
