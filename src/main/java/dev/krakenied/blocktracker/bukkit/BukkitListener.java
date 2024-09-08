@@ -61,6 +61,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public final class BukkitListener implements Listener {
@@ -155,6 +156,16 @@ public final class BukkitListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(final @NotNull BlockPlaceEvent event) {
         final Block block = event.getBlock();
+
+        final EnumSet<Material> blocksToIgnore = this.blockTrackerConfig.blocksToIgnoreOnBlockPlace.get(block.getType());
+        if (blocksToIgnore != null) {
+            final BlockState replacedState = event.getBlockReplacedState();
+
+            if (blocksToIgnore.contains(replacedState.getType())) {
+                return;
+            }
+        }
+
         this.trackingManager.trackByBlock(block);
     }
 

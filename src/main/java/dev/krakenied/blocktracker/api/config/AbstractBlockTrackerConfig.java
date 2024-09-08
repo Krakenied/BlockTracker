@@ -9,8 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.time.Year;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +48,8 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
 
     public abstract @NotNull List<String> getStringList(final @NotNull String path, final @NotNull List<String> def, final @NotNull List<String> comments);
 
+    public abstract @NotNull Map<String, Object> getString2ObjectMap(final @NotNull String path, final @NotNull Map<String, Object> def, final @NotNull List<String> comments);
+
     public <E extends Enum<E>> @NotNull EnumSet<E> getEnumSet(final @NotNull Class<E> enumClass, final @NotNull String path, final @NotNull EnumSet<E> def, final @NotNull List<String> comments) {
         return UnsafeUtil.stringList2EnumSet(
                 enumClass,
@@ -53,6 +57,18 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
                 this.getStringList(
                         path,
                         UnsafeUtil.enumSet2StringList(def),
+                        comments
+                )
+        );
+    }
+
+    public <E extends Enum<E>> @NotNull EnumMap<E, EnumSet<E>> getEnum2EnumSetMap(final @NotNull Class<E> enumClass, final @NotNull String path, final @NotNull EnumMap<E, EnumSet<E>> def, final @NotNull List<String> comments) {
+        return UnsafeUtil.stringToObjectMap2EnumToEnumSetMap(
+                enumClass,
+                this.getLogger(),
+                this.getString2ObjectMap(
+                        path,
+                        UnsafeUtil.enumToEnumSetMap2StringToObjectMap(def),
                         comments
                 )
         );
@@ -129,6 +145,35 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
             "CHORUS_FLOWER"
     ));
     public EnumSet<M> sourcesToIgnoreOnBlockSpread = EnumSet.noneOf(this.getMaterialClass());
+    public EnumMap<M, EnumSet<M>> blocksToIgnoreOnBlockPlace = new EnumMap<>(this.getMaterialClass()) {{
+        final Class<M> materialClass = AbstractBlockTrackerConfig.this.getMaterialClass();
+        final M[] constants = materialClass.getEnumConstants();
+
+        final String waxedPrefix = "WAXED_";
+        final int waxedPrefixLength = waxedPrefix.length();
+
+        for (final M waxedConstant : constants) {
+            final String waxedConstantName = waxedConstant.name();
+
+            if (waxedConstantName.startsWith(waxedPrefix)) {
+                final String notWaxedConstantName = waxedConstantName.substring(waxedPrefixLength);
+                final M notWaxedConstant;
+
+                // shouldn't really throw, however we catch and log it just to ensure
+                try {
+                    notWaxedConstant = Enum.valueOf(materialClass, notWaxedConstantName);
+                } catch (final IllegalArgumentException e) {
+                    final String message = e.getMessage();
+                    AbstractBlockTrackerConfig.this.getLogger().severe(message);
+                    continue;
+                }
+
+                // put it in both directions
+                this.put(waxedConstant, EnumSet.of(notWaxedConstant));
+                this.put(notWaxedConstant, EnumSet.of(waxedConstant));
+            }
+        }
+    }};
 
     private void options() {
         this.trackPistonHeads = this.getBoolean("track-piston-heads", this.trackPistonHeads, List.of(
@@ -153,6 +198,12 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
                 "Specifies the list of source block materials that should be ignored when they cause",
                 "block spread events. This means that when these source blocks spread to other blocks,",
                 "no action will be taken (neither tracking nor untracking)."
+        ));
+        this.blocksToIgnoreOnBlockPlace = this.getEnum2EnumSetMap(this.getMaterialClass(), "blocks-to-ignore-on-block-place", this.blocksToIgnoreOnBlockPlace, List.of(
+                "Specifies the map of block materials to be ignored when placed, along with a list of blocks that",
+                "were replaced during the placement event. For instance, setting WAXED_COPPER_BLOCK: [COPPER_BLOCK]",
+                "ensures that waxing a block will not be tracked. Conversely, COPPER_BLOCK: [WAXED_COPPER_BLOCK]",
+                "is needed to prevent tracking of unwaxing actions."
         ));
     }
 }

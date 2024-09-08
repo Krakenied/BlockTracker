@@ -1,15 +1,21 @@
 package dev.krakenied.blocktracker.bukkit;
 
 import dev.krakenied.blocktracker.api.config.AbstractBlockTrackerConfig;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<YamlConfiguration, Material> {
@@ -93,6 +99,27 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
         }
 
         return stringList;
+    }
+
+    @Override
+    public @NotNull Map<String, Object> getString2ObjectMap(final @NotNull String path, final @NotNull Map<String, Object> def, final @NotNull List<String> comments) {
+        this.setDefault(path, def, comments);
+
+        final ConfigurationSection section = this.config.getConfigurationSection(path);
+        if (section == null) {
+            this.plugin.getLogger().severe(path + " is not a section type value, skipping!");
+            return Object2ObjectMaps.emptyMap();
+        }
+
+        final Set<String> keySet = section.getKeys(false);
+        final int expectedSize = keySet.size();
+
+        final Object2ObjectMap<String, Object> string2ObjectMap = new Object2ObjectOpenHashMap<>(expectedSize);
+        for (final String key : keySet) {
+            string2ObjectMap.put(key, section.get(key));
+        }
+
+        return string2ObjectMap;
     }
 
     private <T> void setDefault(final @NotNull String path, final @NotNull T def, final @NotNull List<String> comments) {
