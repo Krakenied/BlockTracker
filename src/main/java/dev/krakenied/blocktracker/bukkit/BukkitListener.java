@@ -305,7 +305,9 @@ public final class BukkitListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreakBlock(final @NotNull BlockBreakBlockEvent event) {
         final Block source = event.getSource();
-        if (source.getType() == Material.PISTON) {
+        final Material sourceType = source.getType();
+
+        if (sourceType == Material.PISTON || sourceType == Material.STICKY_PISTON) {
             return;
         }
 
