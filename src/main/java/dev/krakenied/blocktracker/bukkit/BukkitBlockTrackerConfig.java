@@ -105,21 +105,44 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
     public @NotNull Map<String, Object> getString2ObjectMap(final @NotNull String path, final @NotNull Map<String, Object> def, final @NotNull List<String> comments) {
         this.setDefault(path, def, comments);
 
-        final ConfigurationSection section = this.config.getConfigurationSection(path);
-        if (section == null) {
-            this.plugin.getLogger().severe(path + " is not a section type value, skipping!");
-            return Object2ObjectMaps.emptyMap();
+        final Object object = this.config.get(path);
+
+        // Handle regular load
+        if (object instanceof final ConfigurationSection section) {
+            final Set<String> keySet = section.getKeys(false);
+            final int expectedSize = keySet.size();
+
+            final Object2ObjectMap<String, Object> string2ObjectMap = new Object2ObjectOpenHashMap<>(expectedSize);
+            for (final String key : keySet) {
+                string2ObjectMap.put(key, section.get(key));
+            }
+
+            return string2ObjectMap;
         }
 
-        final Set<String> keySet = section.getKeys(false);
-        final int expectedSize = keySet.size();
+        // Handle default
+        if (object instanceof final Map<?, ?> map) {
+            final Set<? extends Map.Entry<?, ?>> entrySet = map.entrySet();
+            final int expectedSize = entrySet.size();
 
-        final Object2ObjectMap<String, Object> string2ObjectMap = new Object2ObjectOpenHashMap<>(expectedSize);
-        for (final String key : keySet) {
-            string2ObjectMap.put(key, section.get(key));
+            final Object2ObjectMap<String, Object> string2ObjectMap = new Object2ObjectOpenHashMap<>(expectedSize);
+            for (final Map.Entry<?, ?> entry : entrySet) {
+                final Object key = entry.getKey();
+                final Object value = entry.getValue();
+
+                if (key instanceof final String keyString) {
+                    string2ObjectMap.put(keyString, value);
+                } else {
+                    this.plugin.getLogger().severe(key + " is not a string type value, skipping!");
+                }
+            }
+
+            return string2ObjectMap;
         }
 
-        return string2ObjectMap;
+        this.plugin.getLogger().severe(object + " is not a section type value, skipping!");
+
+        return Object2ObjectMaps.emptyMap();
     }
 
     private <T> void setDefault(final @NotNull String path, final @NotNull T def, final @NotNull List<String> comments) {

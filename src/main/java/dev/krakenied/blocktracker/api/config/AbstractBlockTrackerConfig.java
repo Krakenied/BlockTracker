@@ -13,6 +13,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -147,16 +148,18 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
     public EnumSet<M> sourcesToIgnoreOnBlockSpread = EnumSet.noneOf(this.getMaterialClass());
     public EnumMap<M, EnumSet<M>> blocksToIgnoreOnBlockPlace = new EnumMap<>(this.getMaterialClass()) {{
         final Class<M> materialClass = AbstractBlockTrackerConfig.this.getMaterialClass();
+        final Function<M, EnumSet<M>> emptySetFunction = k -> EnumSet.noneOf(materialClass);
         final M[] constants = materialClass.getEnumConstants();
 
         final String waxedPrefix = "WAXED_";
-        final int waxedPrefixLength = waxedPrefix.length();
+        final String oxidizedPrefix = "OXIDIZED_";
 
+        // https://discord.com/channels/1233303624310849556/1233333369593528330/1325920425070559356
         for (final M waxedConstant : constants) {
             final String waxedConstantName = waxedConstant.name();
 
             if (waxedConstantName.startsWith(waxedPrefix)) {
-                final String notWaxedConstantName = waxedConstantName.substring(waxedPrefixLength);
+                final String notWaxedConstantName = waxedConstantName.substring(waxedPrefix.length());
                 final M notWaxedConstant;
 
                 // shouldn't really throw, however we catch and log it just to ensure
@@ -169,8 +172,29 @@ public abstract class AbstractBlockTrackerConfig<Y, M extends Enum<M>> {
                 }
 
                 // put it in both directions
-                this.put(waxedConstant, EnumSet.of(notWaxedConstant));
-                this.put(notWaxedConstant, EnumSet.of(waxedConstant));
+                this.computeIfAbsent(waxedConstant, emptySetFunction).add(notWaxedConstant);
+                this.computeIfAbsent(notWaxedConstant, emptySetFunction).add(waxedConstant);
+
+                if (notWaxedConstantName.startsWith(oxidizedPrefix)) {
+                    final String regularConstantName = notWaxedConstantName.substring(oxidizedPrefix.length());
+                    final M regularConstant, exposedConstant, weatheredConstant;
+
+                    // shouldn't really throw, however we catch and log it just to ensure
+                    try {
+                        regularConstant = Enum.valueOf(materialClass, regularConstantName.equals("COPPER") ? "COPPER_BLOCK" : regularConstantName);
+                        exposedConstant = Enum.valueOf(materialClass, "EXPOSED_" + regularConstantName);
+                        weatheredConstant = Enum.valueOf(materialClass, "WEATHERED_" + regularConstantName);
+                    } catch (final IllegalArgumentException e) {
+                        final String message = e.getMessage();
+                        AbstractBlockTrackerConfig.this.getLogger().severe(message);
+                        continue;
+                    }
+
+                    // oxidized -> weathered -> exposed -> regular
+                    this.computeIfAbsent(regularConstant, emptySetFunction).add(exposedConstant);
+                    this.computeIfAbsent(exposedConstant, emptySetFunction).add(weatheredConstant);
+                    this.computeIfAbsent(weatheredConstant, emptySetFunction).add(notWaxedConstant);
+                }
             }
         }
     }};
