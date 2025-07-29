@@ -20,6 +20,9 @@ import java.util.logging.Logger;
 
 public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<YamlConfiguration, Material> {
 
+    // It needs to be already available during construction
+    private static final Logger logger = Logger.getLogger("BlockTracker");
+
     private final BukkitBlockTrackerPlugin plugin;
 
     public BukkitBlockTrackerConfig(final @NotNull BukkitBlockTrackerPlugin plugin) {
@@ -46,7 +49,7 @@ public final class BukkitBlockTrackerConfig extends AbstractBlockTrackerConfig<Y
 
     @Override
     public @NotNull Logger getLogger() {
-        return this.plugin.getLogger();
+        return BukkitBlockTrackerConfig.logger;
     }
 
     // Config-related methods
