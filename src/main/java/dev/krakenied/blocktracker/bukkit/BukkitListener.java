@@ -335,29 +335,35 @@ public final class BukkitListener implements Listener {
         final Block block = event.getBlock();
 
         // TODO: somehow replace this logic with switch for better performance?
-        if (this.trackingManager.isTrackedByBlock(block)) {
-            final Material blockType = block.getType();
+        if (!this.trackingManager.isTrackedByBlock(block)) {
+            return;
+        }
 
-            if (Tag.CORALS.isTagged(blockType) || Tag.CORAL_BLOCKS.isTagged(blockType) || Tag.CORAL_PLANTS.isTagged(blockType)) {
-                return;
-            }
+        final Material blockType = block.getType();
 
-            if (Tag.NYLIUM.isTagged(blockType)) {
-                return;
-            }
+        if (Tag.DIRT.isTagged(blockType)) {
+            return;
+        }
 
-            if (Tag.REDSTONE_ORES.isTagged(blockType)) {
-                return;
-            }
+        if (Tag.CORALS.isTagged(blockType) || Tag.CORAL_BLOCKS.isTagged(blockType) || Tag.CORAL_PLANTS.isTagged(blockType)) {
+            return;
+        }
 
-            if (blockType == Material.SCAFFOLDING) {
-                return;
-            }
+        if (Tag.NYLIUM.isTagged(blockType)) {
+            return;
+        }
 
-            // blockType cannot be null so no need to check if the constant is
-            if (blockType == BukkitConstants.SNIFFER_EGG_MATERIAL) {
-                return;
-            }
+        if (Tag.REDSTONE_ORES.isTagged(blockType)) {
+            return;
+        }
+
+        if (blockType == Material.SCAFFOLDING) {
+            return;
+        }
+
+        // blockType cannot be null so no need to check if the constant is
+        if (blockType == BukkitConstants.SNIFFER_EGG_MATERIAL) {
+            return;
         }
 
         this.trackingManager.untrackByBlock(block);
