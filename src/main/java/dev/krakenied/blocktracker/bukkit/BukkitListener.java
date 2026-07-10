@@ -91,7 +91,7 @@ public final class BukkitListener implements Listener {
         }
 
         final Player player = event.getPlayer();
-        if (!player.hasPermission("blocktracker.debug")) {
+        if (!player.hasPermission("blocktrackerlumberjack.debug")) {
             return;
         }
 
@@ -112,7 +112,7 @@ public final class BukkitListener implements Listener {
 
     private @NotNull Component blockTrackerComponent(final @NotNull Block block) {
         return Component.textOfChildren(
-                Component.text("BlockTracker", TextColor.color(0xFFC000)),
+                Component.text("BlockTrackerLumberJack", TextColor.color(0xFFC000)),
                 Component.space(),
                 Component.text('(', NamedTextColor.DARK_GRAY),
                 Component.text("B" + PositionSet.blockKey(block.getX(), block.getY(), block.getZ()), TextColor.color(0xBE02ED)),
@@ -402,7 +402,7 @@ public final class BukkitListener implements Listener {
             return;
         }
 
-        entity.setMetadata("block_tracker", new FixedMetadataValue(plugin, true));
+        entity.setMetadata("block_tracker_lumber_jack", new FixedMetadataValue(plugin, true));
         this.trackingManager.untrackByBlock(block);
     }
 
@@ -413,7 +413,7 @@ public final class BukkitListener implements Listener {
             return;
         }
 
-        if (!entity.hasMetadata("block_tracker")) {
+        if (!entity.hasMetadata("block_tracker_lumber_jack")) {
             return;
         }
 

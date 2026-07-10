@@ -8,7 +8,7 @@
     <artifactId>blocktracker</artifactId>
     <version>1.0.8-SNAPSHOT</version>
 
-    <name>BlockTracker</name>
+    <name>BlockTrackerLumberJack</name>
     <inceptionYear>2023</inceptionYear>
 
     <properties>

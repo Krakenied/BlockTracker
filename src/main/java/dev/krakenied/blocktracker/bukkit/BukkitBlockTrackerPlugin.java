@@ -51,7 +51,7 @@ public final class BukkitBlockTrackerPlugin extends JavaPlugin implements BlockT
     }
 
     private void registerCommands() {
-        this.getServer().getCommandMap().register("blocktracker", new BukkitBlockTrackerCommand(this));
+        this.getServer().getCommandMap().register("blocktrackerlumberjack", new BukkitBlockTrackerCommand(this));
     }
 
     private void registerListeners() {

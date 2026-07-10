@@ -7,6 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 public final class BukkitConstants {
 
-    public static final @NotNull NamespacedKey DATA_KEY = new NamespacedKey("block_tracker", "data");
+    public static final @NotNull NamespacedKey DATA_KEY = new NamespacedKey("block_tracker_lumber_jack", "data");
     public static final @Nullable Material SNIFFER_EGG_MATERIAL = Material.getMaterial("SNIFFER_EGG");
 }
